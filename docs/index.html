@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+<head>
+<script src="healthRing.js"></script>
+<style>
+    h1 { text-align: center; }
+    h2 { 
+        margin-top: 60px;
+        border-bottom: solid #ccc 1px;
+    }
+    body {
+        background: #ffcc00;
+        font-family: Ariel, sans-serif;
+        line-height: 2em;
+    }
+    pre {
+        font-size: 1.1em;
+        background: #eee;
+        padding: 20px;
+    }
+    #content {
+        width: 50%;
+        margin: auto;
+        background: white;
+        padding: 80px;
+    }
+</style>
+</head>
+<body>
+
+    <div id="content">
+<h1>Health Ring Demo</h1>
+<h2>Basic usage</h2>
+
+<p>Add a container like this:</p>
+
+<pre>
+    &lt;div class="health-ring-container"&gt;&lt;/div&gt;
+</pre>
+
+<p>and JS like this:</p>
+
+<pre>
+    &lt;script&gt;
+        new HealthRing('.health-ring-container')
+            .add(60, .70, '#fc8b26')
+            .add(50, .64, '#ffcc00');
+    &lt;/script&gt;
+</pre>
+
+<p>to render health rings like this:</p>
+
+<div class="health-ring-container"></div>
+
+<h2>Adding more rings</h2>
+
+<p>The arguments are:</p>
+<pre>.add(radius, percentage, color)</pre>
+
+<p>So, we could add a smaller green ring, 32% complete, like this:</p>
+
+<pre>
+    &lt;script&gt;
+        new HealthRing('.health-ring-container')
+            .add(60, .70, '#fc8b26')
+            .add(50, .64, '#ffcc00')
+            .add(40, .32, '#00ff00');
+    &lt;/script&gt;
+</pre>
+
+<div class="health-ring-container-ex2"></div>
+
+<h2>Adding rings one at a time</h2>
+
+<p>You may want to add a ring using separate calls to the add() function.  In that case, the HealthRing class doesn't know how large the SVG should be.  By default, it will use the radius from your <i>first</i> call to add() to set the SVG size.  If you always start by adding the outermost ring, this will work fine.  If not, you may get something like this:
+
+<pre>
+    &lt;script&gt;
+        let ring = new HealthRing('.health-ring-container');
+        ring.add(40, .32, '#00ff00');   // the first call to add() sets the size, 
+                                        // big enough for a circle of radius 40...
+        ring.add(50, .64, '#ffcc00');   // ...but this is bigger (radius 50)
+        ring.add(60, .70, '#fc8b26');   // radius 60
+        ring.add(200, .70, '#fc8b26');  // radius 200
+    &lt;/script&gt;
+</pre>
+
+<div class="health-ring-container-ex3-bad"></div>
+
+<p>To fix that, you can either:</p>
+<ol>
+    <li>always add() the largest ring first, or</li>
+    <li>pass the radius of the largest ring when you instantiate HealthRing, like this:</li>
+</ol>
+
+<pre>
+    &lt;script&gt;
+        let ring = new HealthRing('.health-ring-container', 200); // "200" is the radius of the largest ring
+        ring.add(40, .32, '#00ff00');
+        ring.add(50, .64, '#ffcc00');
+        ring.add(60, .70, '#fc8b26');
+        ring.add(200, .70, '#fc8b26');
+    &lt;/script&gt;
+</pre>
+
+<div class="health-ring-container-ex3-good"></div>
+
+<h2>Setting the stroke width</h2>
+
+<p>You can also set the width of the stroke, like this:</p>
+
+<pre>
+    &lt;script&gt;
+        new HealthRing('.health-ring-container', null, 3)
+            .add(60, .70, '#fc8b26')
+            .add(50, .64, '#ffcc00')
+            .add(40, .32, '#00ff00');
+    &lt;/script&gt;
+</pre>
+
+<div class="health-ring-container-ex4"></div>
+
+<p>The default stroke width is 7.  A stroke width of more than about 10 starts to look smooshed together.</p>
+
+</div>
+<script>
+
+new HealthRing('.health-ring-container')
+	.add(60, .70, '#fc8b26')
+	.add(50, .64, '#ffcc00');
+
+new HealthRing('.health-ring-container-ex2')
+	.add(60, .70, '#fc8b26')
+	.add(50, .64, '#ffcc00')
+    .add(40, .32, '#00ff00');
+
+let ring3bad = new HealthRing('.health-ring-container-ex3-bad');
+ring3bad.add(40, .32, '#00ff00');    
+ring3bad.add(50, .64, '#ffcc00')
+ring3bad.add(60, .70, '#fc8b26')
+ring3bad.add(200, .70, '#fc8b26')
+
+let ring3good = new HealthRing('.health-ring-container-ex3-good', 200);
+ring3good.add(40, .32, '#00ff00');    
+ring3good.add(50, .64, '#ffcc00')
+ring3good.add(60, .70, '#fc8b26')
+ring3good.add(200, .70, '#fc8b26')
+
+new HealthRing('.health-ring-container-ex4', null, 3)
+	.add(60, .70, '#fc8b26')
+	.add(50, .64, '#ffcc00')
+    .add(40, .32, '#00ff00');
+
+
+</script>
+
+</body>
+</html>
